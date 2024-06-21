@@ -2,19 +2,16 @@
 import UserSchema from "../model/user.schema.js";
 
 export default class UserController {
- 
+ // main route
   homeLogin = (req, res) => {
     res.render("login");
   };
-
+ //register route
   register = (req, res) => {
     res.render("register");
   };
 
-  main = (req, res) => {
-    res.render("main");
-  };
-
+   //user register here
   signUp = async (req, res, next) => {
     try {
       const name = req.body.name;
@@ -35,7 +32,7 @@ export default class UserController {
       next(err);
     }
   };
-
+   //user login here
   signIn = async (req, res) => {
     const { email, password } = req.body;
     const user = await UserSchema.findOne({ email });
@@ -46,7 +43,7 @@ export default class UserController {
         message: "Invalid credentials",
       });
     }
-
+//comparing hashed password
     let match = await user.comparePassword(password);
     console.log("your match",match)
     if (!match) {
@@ -54,7 +51,7 @@ export default class UserController {
         message: "Invalid credentials",
       });
     }
-
+//using JWTToken
     const token = await user.getJWTToken();
 
     return res.status(200).json({
